@@ -1,0 +1,24 @@
+from typing import TypedDict
+
+
+class Config(TypedDict):
+    # Globals
+    FILE_PATH: str
+    EXTEND: str
+    ENCRYPT_KEY: str
+    SYSTEM_INFORMATION: str
+    CLIPBOARD_INFORMATION: str
+    AUDIO_INFORMATION: str
+    SCREENSHOT_INTERVAL: int
+    SCREENSHOT_INFORMATION: str
+    KEYS_INTERVAL: int
+    KEYS_INFORMATION: str
+
+
+"""
+SYSTEM_INFORMATION_E: str
+    KEYS_INFORMATION_E: str
+    SCREENSHOT_INFORMATION_E: str
+    CLIPBOARD_INFORMATION_E: str
+    AUDIO_INFORMATION_E: str
+"""

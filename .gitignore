@@ -1,0 +1,53 @@
+# resources
+output/
+
+# Entornos virtuales (venv, .venv, Pipenv, etc.)
+venv/
+.venv/
+env/
+*.env/
+output/
+
+# Archivos de caché de Python
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Instalaciones de paquetes (pip, poetry, etc.)
+*.egg-info/
+*.egg
+dist/
+build/
+pip-wheel-metadata/
+
+# Archivos de desarrollo y entornos
+.tox/
+.nox/
+.coverage
+htmlcov/
+.coverage.*
+.pytest_cache/
+.mypy_cache/
+.pytype/
+
+# Configuraciones de IDEs y editores
+.vscode/
+.idea/
+*.swp
+*.swo
+*.sublime-workspace
+
+# Archivos de sistema
+.DS_Store
+Thumbs.db
+
+# Archivos de entorno (variables de entorno)
+.env
+.env.local
+.env.*.local
+
+# Archivos de Jupyter Notebook (opcional)
+.ipynb_checkpoints/
+
+# Archivos de Poetry (si usas Poetry para dependencias)
+poetry.lock

@@ -1,0 +1,14 @@
+{
+  "extraPaths": ["src"],
+  "include": ["src"],
+  "exclude": [
+    "**/node_modules",
+    "**/__pycache__",
+    "**/.mypy_cache",
+    "**/.pytest_cache",
+    "**/.venv",
+    "**/venv",
+    "**/env"
+  ],
+  "typeCheckingMode": "strict"
+}
