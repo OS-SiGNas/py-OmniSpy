@@ -15,26 +15,25 @@ class Screenshots_Interval(System_Daemon):
         number_of_iterations: int = 0,
         number_of_iterations_end: int = 3,
     ):
+        self._is_running: bool = False
         self._stop_signal: bool = False
         self._logger: Logger = logger
         self._folder: str = config["FILE_PATH"]
-        # _interval = int(config.get("SCREENSHOT_INTERVAL", 60))  # segundos
         self._interval: int = config["SCREENSHOT_INTERVAL"] * 60
         self._number_of_iterations: int = number_of_iterations
         self._number_of_iterations_end: int = number_of_iterations_end
         logger.info("ready")
 
-    def restart(self) -> None: ...
-    def stop(self) -> None: 
-        self._logger.info("stopping")
-        self._stop_signal = True
-        self._interval = 0 
-        self._number_of_iterations = 0
-        self._number_of_iterations_end = 0
-
     def start(self) -> None:
+        if self._is_running:
+            self._logger.info("daemon is running")
+            return None
         self._logger.info("starting")
-        while not self._stop_signal and self._number_of_iterations < self._number_of_iterations_end:
+        while (
+            not self._stop_signal
+            and self._number_of_iterations < self._number_of_iterations_end
+        ):
+            self._is_running = True
             _timestamp = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
             _filename = f"screenshot_{_timestamp}.png"
             _filepath = f"{self._folder}/{_filename}"
@@ -49,5 +48,19 @@ class Screenshots_Interval(System_Daemon):
                 self._logger.error(
                     f"Something wrong when take screenshot -> {_filepath}", e
                 )
-            finally:
-                self._logger.info("Daemon finished")
+        self._is_running = False
+        self._logger.info("Daemon finished")
+
+    def stop(self) -> None:
+        if not self._is_running:
+            return None
+        self._logger.info("stopping")
+        self._stop_signal = True
+
+    def restart(self) -> None:
+        if not self._is_running:
+            return None
+        self._logger.info("restarting")
+        self.stop()
+        time.sleep(self._interval)
+        self.start()
