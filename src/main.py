@@ -62,6 +62,7 @@ class Main:
         try:
             for daemon in self._daemons:
                 daemon.stop()
+                del daemon
             for future in self._futures:
                 self._logger.warn(f"closing {future}")
                 future.cancel()

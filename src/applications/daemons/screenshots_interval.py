@@ -15,52 +15,52 @@ class Screenshots_Interval(System_Daemon):
         number_of_iterations: int = 0,
         number_of_iterations_end: int = 3,
     ):
-        self._is_running: bool = False
-        self._stop_signal: bool = False
-        self._logger: Logger = logger
-        self._folder: str = config["FILE_PATH"]
-        self._interval: int = config["SCREENSHOT_INTERVAL"] * 60
-        self._number_of_iterations: int = number_of_iterations
-        self._number_of_iterations_end: int = number_of_iterations_end
-        logger.info("ready")
+        self.__is_running: bool = False
+        self.__stop_signal: bool = False
+        self.__logger: Logger = logger
+        self.__folder: str = config["FILE_PATH"]
+        self.__interval: int = config["SCREENSHOT_INTERVAL"] * 60
+        self.__number_of_iterations: int = number_of_iterations
+        self.__number_of_iterations_end: int = number_of_iterations_end
+        self.__logger.info("ready")
 
     def start(self) -> None:
-        if self._is_running:
-            self._logger.info("daemon is running")
+        if self.__is_running:
+            self.__logger.info("daemon is running")
             return None
-        self._logger.info("starting")
+        self.__logger.info("starting")
         while (
-            not self._stop_signal
-            and self._number_of_iterations < self._number_of_iterations_end
+            not self.__stop_signal
+            and self.__number_of_iterations < self.__number_of_iterations_end
         ):
-            self._is_running = True
+            self.__is_running = True
             _timestamp = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
             _filename = f"screenshot_{_timestamp}.png"
-            _filepath = f"{self._folder}/{_filename}"
+            _filepath = f"{self.__folder}/{_filename}"
             try:
                 _img = ImageGrab.grab()
-                self._logger.info("↘️ saving")
+                self.__logger.info("↘️ saving")
                 _img.save(_filepath)
-                self._logger.info(f"💾 Screenshot saved: {_filepath}")
-                self._number_of_iterations += 1
-                time.sleep(self._interval)
+                self.__logger.info(f"💾 Screenshot saved: {_filepath}")
+                self.__number_of_iterations += 1
+                time.sleep(self.__interval)
             except Exception as e:
-                self._logger.error(
+                self.__logger.error(
                     f"Something wrong when take screenshot -> {_filepath}", e
                 )
-        self._is_running = False
-        self._logger.info("Daemon finished")
+        self.__is_running = False
+        self.__logger.info("Daemon finished")
 
     def stop(self) -> None:
-        if not self._is_running:
+        if not self.__is_running:
             return None
-        self._logger.info("stopping")
-        self._stop_signal = True
+        self.__logger.info("stopping")
+        self.__stop_signal = True
 
     def restart(self) -> None:
-        if not self._is_running:
+        if not self.__is_running:
             return None
-        self._logger.info("restarting")
+        self.__logger.info("restarting")
         self.stop()
-        time.sleep(self._interval)
+        time.sleep(self.__interval)
         self.start()
