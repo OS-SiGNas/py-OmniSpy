@@ -12,8 +12,8 @@ def get_computer_information(config: Config, logger: Logger) -> None:
     _path: str = _file_path + _extend + _information
 
     try:
-        with open(_path, "a") as f:
-            if f.tell() > 10:
+        with open(_path, "a") as _f:
+            if _f.tell() > 10:
                 return
 
             _hostname: str = socket.gethostname()
@@ -27,7 +27,7 @@ def get_computer_information(config: Config, logger: Logger) -> None:
             _log: str = _01 + _02 + _03 + _04
             logger.debug(f"writing in {_path}", _log)
 
-            f.write(_log)
+            _f.write(_log)
     except Exception as e:
         logger.error("Error in computer information module: \n", e)
 

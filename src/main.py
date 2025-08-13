@@ -1,4 +1,4 @@
-from typing import List, NoReturn
+from typing import List
 from types import FrameType
 import signal
 import sys
@@ -11,6 +11,11 @@ from src.applications.computer_information import get_computer_information
 
 
 class Main:
+    def __del__(self) -> None:
+        self.__logger.info(f"destroying: {self}")
+        del self
+        breakpoint()
+
     def __init__(self, config: Config, logger: Logger, daemons: List[System_Daemon]):
         signal.signal(signal.SIGINT, self.__handle_signals)
         signal.signal(signal.SIGTERM, self.__handle_signals)
@@ -27,26 +32,26 @@ class Main:
             self.__logger.error("** MainException **", _e)
             self.__shutdown(1)
 
-    def __handle_signals(self, signum: int, frame: FrameType | None) -> NoReturn:
-        self.__logger.info(f"Signal: {signum} {frame}")
-        self.__shutdown(0)
-        raise
+    def __handle_signals(self, signum: int, frame: FrameType | None) -> None:
+        self.__logger.warn(f"Signal: {signum} {frame}")
+        return self.__shutdown(0)
 
     def __shutdown(self, code: int) -> None:
         try:
             for _daemon in self.__daemons:
                 _daemon.stop()
                 del _daemon
-            del self.__daemons
-            for future in self.__futures:
-                self.__logger.warn(f"closing {future}")
-                future.cancel()
-                future.result(timeout=5)
-                self.__logger.info(f"Future: {future}")
-        except Exception as e:
-            self.__logger.error("problem in shutdown", e)
+            for _future in self.__futures:
+                self.__logger.warn(f"closing {_future}")
+                _future.cancel()
+                _future.result(timeout=5)
+                self.__logger.info(f"Future: {_future}")
+        except Exception as _e:
+            self.__logger.error("problem in shutdown", _e)
         finally:
             self.__executor.shutdown(wait=True, cancel_futures=True)
+            self.__daemons.clear()
+            del self.__daemons
             self.__futures.clear()
             del self.__futures
             del self.__executor
